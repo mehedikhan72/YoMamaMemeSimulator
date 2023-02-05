@@ -28,8 +28,8 @@ export default function Main() {
             topText = topText.slice(2);
             topText = name + "'s " + topText;
             var bottomText = data.bottom_text;
-            setTopTxt(topText);
-            setbottomTxt(bottomText);
+            setTopTxt(topText.toUpperCase());
+            setbottomTxt(bottomText.toUpperCase());
             setMemeType(data.type);
         })
     }
@@ -71,27 +71,78 @@ export default function Main() {
             ctx.textBaseline = "top";
             ctx.fillStyle = "white";
             ctx.strokeStyle = "black";
-            ctx.lineWidth = 3;
+            ctx.lineWidth = 2.5;
+
+            var textWidthTop = ctx.measureText(topTxt).width;
+          
+            // check if the text width is greater than the canvas width
+            if (textWidthTop > canvas.width - 25) {
+              // reduce the font size until it fits
+              let fontSize = 60;
+              while (textWidthTop > canvas.width - 25 && fontSize > 30) {
+                fontSize -= 5;
+                ctx.font = `${fontSize}px impact, sans-serif`;
+                textWidthTop = ctx.measureText(topTxt).width;
+                console.log("infinite")
+              }
+            }
 
             ctx.drawImage(image, 0, 0);
-            ctx.fillText(topTxt, topX, topY);
-            ctx.strokeText(topTxt, topX, topY);
-            ctx.fillText(bottomTxt, bottomX, bottomY);
-            ctx.strokeText(bottomTxt, bottomX, bottomY);
+
+            const textWidth = ctx.measureText(topTxt).width;
+            const textHeight = ctx.measureText(topTxt).actualBoundingBoxAscent;
+            ctx.fillText(topTxt, topX, topY, textWidth, textHeight);
+            ctx.strokeText(topTxt, topX, topY, textWidth, textHeight);
+
+            const bottomTextWidth = ctx.measureText(bottomTxt).width;
+            const bottomTextHeight = ctx.measureText(bottomTxt).actualBoundingBoxAscent;
+            ctx.fillText(bottomTxt, bottomX, bottomY, bottomTextWidth, bottomTextHeight);
+            ctx.strokeText(bottomTxt, bottomX, bottomY, bottomTextWidth, bottomTextHeight);
         };
     }, [topTxt, bottomTxt, memeType]);
 
+    async function CopyImage() {
+        const canvas = canvasRef.current;
+        const dataURL = canvas.toDataURL();
+
+        const data = await fetch(dataURL);
+        const blob = await data.blob();
+
+        try{
+            await navigator.clipboard.write([
+                new ClipboardItem({
+                    [blob.type] : blob,
+                })
+            ])
+            console.log("Image Copied!");
+            alert("Copied to clipboard");
+        }
+        catch(e){
+            console.log(e);
+        }
+    }
+
     return (
         <div>
-            <form onSubmit={handleSubmit}>
-                <input ref={inputRef} type="text" placeholder="Enter a friend's name"/>
-                <button>Get a joke.</button>
-                {/* {joke ? <h2>{joke}</h2> : null} */}
-                {topTxt} {bottomTxt}
-                <br />
-                <br />
-            </form>
-            {topTxt ? <canvas ref={canvasRef} /> : null}
+            <div className="d-flex justify-content-center">
+                <form className="form-inline mr-3" onSubmit={handleSubmit}>
+                    <div className="form-group mx-sm-3 mb-2">
+                    <input ref={inputRef} className="form-control form-control-sm form-input" type="text" placeholder="Enter a friend's name" />
+                    <button className="btn btn-danger mb-2 form-input">Get A Joke</button>
+                    </div>
+                </form>
+            </div>
+
+            <div className="canvas-image">
+                {topTxt ? <canvas ref={canvasRef} /> : null}
+            </div>
+            
+            <br />
+            <br />
+            <div className="copy-btn">
+                {topTxt ? <button className="btn btn-danger mb-2 form" onClick={CopyImage}>Send A Friend</button> : null}
+            </div>
+        
         </div>
     )
 }
