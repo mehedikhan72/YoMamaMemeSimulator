@@ -12,17 +12,21 @@
 }
 
 .canvas-image{
-  margin-top: 50px;
+  margin-top: 20px;
   display: flex;
   justify-content: center;
 }
 
+.canv{
+  width: 80%;
+}
 .copy-btn{
   display: flex;
   justify-content: center;
+  margin-top: -20px;
 }
 
 .header{
-  margin-top: 50px;
+  margin-top: 10px;
   text-align: center;
 }

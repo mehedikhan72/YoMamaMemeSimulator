@@ -56,8 +56,16 @@ export default function Main() {
         // console.log(rand_value)
 
         image.onload = () => {
-            canvas.height = image.naturalHeight;
-            canvas.width = image.naturalWidth;
+            var mq = window.matchMedia("(max-width: 600px)");
+            if(mq.matches) {
+                canvas.height = image.naturalHeight * .5;
+                canvas.width = image.naturalWidth * .5;
+            }
+            else{
+                canvas.height = image.naturalHeight;
+                canvas.width = image.naturalWidth;
+            }
+
             //finding text positions
 
             const topX = canvas.width / 2;
@@ -134,7 +142,7 @@ export default function Main() {
             </div>
 
             <div className="canvas-image">
-                {topTxt ? <canvas ref={canvasRef} /> : null}
+                {topTxt ? <canvas className="canv" ref={canvasRef} /> : null}
             </div>
             
             <br />
