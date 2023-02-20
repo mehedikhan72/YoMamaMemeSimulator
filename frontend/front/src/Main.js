@@ -1,10 +1,10 @@
 import React from "react";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 
 export default function Main() {
-    const [topTxt, setTopTxt] = React.useState("");
-    const [bottomTxt, setbottomTxt] = React.useState("");
-    const [memeType, setMemeType] = React.useState("");
+    const [topTxt, setTopTxt] = useState("");
+    const [bottomTxt, setbottomTxt] = useState("");
+    const [memeType, setMemeType] = useState("");
     const inputRef = useRef(null);
     const canvasRef = useRef(null);
 
@@ -15,10 +15,11 @@ export default function Main() {
         // console.log(inputValue);
 
         if(name === "") {
-            console.log("You must enter a name!");
+            alert("You must enter a name!");
             return;
         }
 
+        // only 68 memes are available in the db rn, too lazy to add.
         var random_pk = Math.floor(Math.random() * 68) + 1;
         fetch(`http://127.0.0.1:8000/api/joke/${random_pk}/`)
         .then(response => response.json())
@@ -52,8 +53,6 @@ export default function Main() {
 
         const rand_value = Math.floor(Math.random() * memeTypeArr.length)
         image.src = memeTypeArr[rand_value];
-        // console.log(memeType[rand_value]);
-        // console.log(rand_value)
 
         image.onload = () => {
             var mq = window.matchMedia("(max-width: 600px)");
