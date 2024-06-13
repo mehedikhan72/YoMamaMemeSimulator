@@ -8,6 +8,7 @@ For the API, Django REST framework was used. Canvas was used to dynamically crea
 
 ## How to run locally
 For the backend, cd into the yomama directory where there is a requirements.txt file. Run the following commands:
+
 ```python3 -m venv venv```
 
 ```source venv/bin/activate```
@@ -22,6 +23,7 @@ For the backend, cd into the yomama directory where there is a requirements.txt 
 
 
 For the frontend, cd into the frontend/front directory where there is a package.json file. Run the following commands:
+
 ```yarn```
 
 ```yarn start```
